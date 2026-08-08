@@ -1,94 +1,117 @@
-
 # YouTube Video Downloader
 
-A powerful, easy-to-use YouTube Video Downloader built using `customtkinter` for a modern, sleek UI. This application allows users to download YouTube videos in various resolutions, showing live progress, download speed, file size, and estimated time of completion.
+A Windows desktop GUI (built with `customtkinter`) that downloads YouTube videos at a chosen resolution, with thumbnail preview, live progress bar, download speed, file size, and ETA. Downloading is handled by `yt-dlp` on a background thread to keep the UI responsive.
 
-![Screenshot (4)](https://github.com/user-attachments/assets/a2d1699d-15cc-4865-9bca-a3e8f13599b6)
+> **Legal / ToS notice:** Downloading videos from YouTube may violate YouTube's Terms of Service and/or local copyright law depending on the content and your jurisdiction. Use this tool only with content you have the right to download. The author of this tool is not responsible for misuse.
 
+## Project Status
 
-![Screenshot 2024-08-09 204821](https://github.com/user-attachments/assets/33dda4e3-e945-4d73-9905-a487a0e05b24)
+Small personal/portfolio desktop app. The download flow works on Windows with a locally installed `ffmpeg`. Not actively maintained.
 
+## Key Features
 
-## Features
+- Modern `customtkinter` UI with desktop theme integration
+- Resolution selection fetched for the provided YouTube URL
+- Thumbnail preview before downloading
+- Choose a custom save location via file dialog
+- Live download progress bar with speed, percentage, and ETA
+- Background-thread download so the UI stays responsive
+- Opens the destination folder on completion, then resets for the next download
+- Status/error messages for bad URLs or network problems
 
-### 1. **Modern UI with `customtkinter`**
-- The application leverages `customtkinter`, which provides a modern, customizable interface that adapts to your system's theme. The dark mode and theme integration give a contemporary look and feel.
+## Technology Stack
 
-### 2. **Resolution Selection**
-- Automatically fetches available resolutions for the given YouTube URL.
-- Allows users to choose their desired resolution before downloading the video.
+- **Language**: Python 3
+- **GUI**: `customtkinter`, `tkinter`
+- **Download**: `yt-dlp` (with `ffmpeg` for merging/converting)
+- **Image**: `Pillow`, `requests` (thumbnail fetch)
 
-### 3. **Thumbnail Preview**
-- Displays the video thumbnail to give users a visual confirmation before downloading.
+## Repository Structure
 
-### 4. **Custom Save Location**
-- Users can choose where to save the downloaded video using a simple file dialog.
-- The application ensures that the video is saved with a user-friendly name based on the video title.
+```
+.
+├── main.py             # Single-file application (GUI + download logic)
+├── requirements.txt    # Python dependencies
+├── LICENSE
+└── README.md
+```
 
-### 5. **Live Download Progress**
-- Real-time progress bar showing how much of the video has been downloaded.
-- Displays download speed in MB/s, percentage of download completed, and the estimated time remaining (ETA) until completion.
+## Prerequisites
 
-### 6. **Error Handling and Status Updates**
-- Provides clear, user-friendly error messages if something goes wrong (e.g., issues with the YouTube URL or network problems).
-- The status label at the bottom of the application keeps users informed about the current operation.
+- Python 3.10+
+- `ffmpeg` installed and on `PATH`, **or** set the `ffmpeg_location` path in `main.py` to your `ffmpeg.exe` location. The committed copy of `main.py` hardcodes a Windows-specific `ffmpeg.exe` path under the author's user profile; update it to your own install.
 
-### 7. **Post-Download Actions**
-- Automatically opens the folder containing the downloaded video once the download is complete.
-- The application resets itself after a download, ready for the next task.
+  > **Platform note:** As-is, `main.py` uses a Windows-only `ffmpeg.exe` path and `os.startfile` to open the output folder, so it runs on Windows out of the box. On macOS/Linux, replace the `ffmpeg_location` and `os.startfile` calls.
 
-### 8. **Multi-threaded Downloading**
-- The application uses a separate thread to handle the download process, ensuring that the UI remains responsive even during long downloads.
+## Getting Started
 
-## Installation
-
-1. **Clone the repository:**
+1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/youtube-video-downloader.git
+   git clone https://github.com/dilrukshax/YouTube-Video-Downloader
+   cd YouTube-Video-Downloader
    ```
 
-2. **Navigate to the project directory:**
+2. Create and activate a virtual environment, then install dependencies:
 
    ```bash
-   cd youtube-video-downloader
-   ```
-
-3. **Install the required Python packages:**
-
-   ```bash
+   python -m venv venv
+   source venv/bin/activate      # Windows: venv\Scripts\activate
    pip install -r requirements.txt
    ```
 
-   - Ensure `yt-dlp`, `customtkinter`, `Pillow`, and `requests` are installed.
+3. Install `ffmpeg` if you don't already have it. On Windows, use Winget:
 
-4. **Run the application:**
+   ```bash
+   winget install Gyan.FFmpeg
+   ```
+
+   Otherwise download it from https://ffmpeg.org and add `ffmpeg.exe` to your `PATH` (or update `ffmpeg_location` in `main.py`).
+
+4. Run the application:
 
    ```bash
    python main.py
    ```
 
-## Requirements
+## Configuration
 
-- **Python 3.10 or higher**
-- `yt-dlp`
-- `customtkinter`
-- `Pillow`
-- `requests`
+There is no separate configuration file. The `ffmpeg_location` is set inline in `main.py`; update it to match your local `ffmpeg.exe` if it is not on your `PATH`.
 
-## How to Use
+## Usage
 
-1. **Enter the YouTube URL**: Paste the YouTube video URL in the provided entry box.
-2. **Fetch Resolutions**: Click on the "Fetch Resolutions" button to get available download options.
-3. **Select Resolution**: Choose your preferred resolution from the dropdown menu.
-4. **Choose Save Location**: Browse and select the folder where you want to save the downloaded video.
-5. **Start Download**: Click on "Download" and watch the progress bar update in real-time.
+1. Paste a YouTube video URL into the entry box.
+2. Click "Fetch Resolutions" to populate the resolution dropdown.
+3. Choose a resolution.
+4. Browse for a save location.
+5. Click "Download" and watch the progress bar. The destination folder opens when the download completes.
+
+## Testing
+
+There is no automated test suite. Tests were not executed.
+
+## Deployment
+
+This is a desktop application; "deployment" means installing the Python dependencies and `ffmpeg`, then running `python main.py`.
+
+## Limitations
+
+- The committed `ffmpeg_location` hardcodes a Windows user-specific path; update it for your environment.
+- Windows-specific calls (`os.startfile`) mean macOS/Linux need small code changes.
+- No automated tests.
 
 ## Contributing
 
-Contributions are welcome! If you have ideas for improvements or spot any issues, feel free to open an issue or submit a pull request.
+This is a personal project. If you'd like to suggest improvements, please open an issue first to discuss the change.
 
 ## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
+Licensed under the [MIT License](LICENSE). Note that this license covers only the author's code; downloading YouTube content may be governed by YouTube's Terms of Service and copyright law.
 
+## Author
+
+Dilan Dilruksha  
+Software Engineer | Backend & Full-Stack Development  
+Portfolio: https://dilandilruksha.dev  
+LinkedIn: https://www.linkedin.com/in/dilan-dilruksha  
+GitHub: https://github.com/dilrukshax
